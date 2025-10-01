@@ -1,3 +1,44 @@
 linenoise_example
-*.dSYM
 history.txt
+
+# Object and build artifacts
+*.o
+*.a
+*.so
+*.so.*
+
+# Debug symbols (macOS)
+*.dSYM/
+
+# Backup / temp files
+*~
+*.swp
+*.swpx
+*.swo
+.#*
+
+# Debian build artifacts
+*.deb
+*.buildinfo
+*.changes
+*.dsc
+*.tar.gz
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/liblinenoise-dev/
+debian/tmp/
+debian/*.substvars
+
+# Coverage / test (future-proof)
+coverage/
+*.gcno
+*.gcda
+
+# IDE/editor directories
+.vscode/
+.idea/
+
+# Generated symlinks / libs after build
+liblinenoise.so
+liblinenoise.so.*

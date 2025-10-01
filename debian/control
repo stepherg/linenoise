@@ -13,4 +13,6 @@ Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Minimal, zero-config readline replacement (development files)
  A small, self-contained line editing library providing line editing,
  history, completion, hints, and multi-line support with a BSD license.
- This package contains the static library and header file for development.
+ This development package installs the shared library symlinks and header
+ for building software against linenoise. A static library can be produced
+ by running 'make static' but is not installed by default.
