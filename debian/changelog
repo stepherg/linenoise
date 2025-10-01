@@ -1,0 +1,5 @@
+linenoise (1.0-1) unstable; urgency=medium
+
+  * Initial release (Debian packaging via GitHub Actions).
+
+ -- Your Name <you@example.com>  Wed, 01 Oct 2025 00:00:00 +0000

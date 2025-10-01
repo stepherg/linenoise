@@ -1,0 +1,59 @@
+name: Build Debian Packages
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm64
+    name: Build (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install build-essential devscripts debhelper
+
+      - name: Bump changelog for CI build
+        run: |
+          # Append +ci timestamp to version for uniqueness (non-fatal)
+          set -e
+          if command -v dch >/dev/null; then
+            dch --local "+ci$(date -u +%Y%m%d%H%M%S)" "Automated CI build" || true
+          fi
+
+      - name: Build package
+        run: |
+          export DEB_BUILD_OPTIONS="parallel=$(nproc)"
+          dpkg-buildpackage -us -uc -b
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p artifacts
+          mv ../*.deb artifacts/ || true
+          mv ../*.buildinfo ../*.changes artifacts/ || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linenoise-${{ matrix.arch }}-deb
+          path: artifacts
+
+  summary:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "Packages built for amd64 and arm64."

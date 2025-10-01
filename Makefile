@@ -1,7 +1,32 @@
-linenoise_example: linenoise.h linenoise.c
+PREFIX?=/usr
+LIBNAME=liblinenoise.a
+AR?=ar
+RANLIB?=ranlib
+CFLAGS?=-Wall -W -Os -g
 
-linenoise_example: linenoise.c example.c
-	$(CC) -Wall -W -Os -g -o linenoise_example linenoise.c example.c
+all: $(LIBNAME) linenoise_example
+
+$(LIBNAME): linenoise.o
+	$(AR) rcs $(LIBNAME) linenoise.o
+	$(RANLIB) $(LIBNAME) >/dev/null 2>&1 || true
+
+linenoise.o: linenoise.c linenoise.h
+	$(CC) $(CFLAGS) -c linenoise.c -o linenoise.o
+
+linenoise_example: linenoise.c example.c linenoise.h $(LIBNAME)
+	$(CC) $(CFLAGS) -o linenoise_example linenoise.c example.c
+
+install: $(LIBNAME) linenoise.h
+	mkdir -p $(DESTDIR)$(PREFIX)/include
+	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	install -m 644 linenoise.h $(DESTDIR)$(PREFIX)/include/
+	install -m 644 $(LIBNAME) $(DESTDIR)$(PREFIX)/lib/
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/include/linenoise.h
+	rm -f $(DESTDIR)$(PREFIX)/lib/$(LIBNAME)
 
 clean:
-	rm -f linenoise_example
+	rm -f linenoise_example $(LIBNAME) linenoise.o
+
+.PHONY: all clean install uninstall

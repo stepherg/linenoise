@@ -1,0 +1,16 @@
+Source: linenoise
+Section: libs
+Priority: optional
+Maintainer: Your Name <you@example.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.0
+Homepage: https://github.com/stepherg/linenoise
+Rules-Requires-Root: no
+
+Package: liblinenoise-dev
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Minimal, zero-config readline replacement (development files)
+ A small, self-contained line editing library providing line editing,
+ history, completion, hints, and multi-line support with a BSD license.
+ This package contains the static library and header file for development.
